@@ -1,0 +1,22 @@
+name: sriov-network-device-plugin
+summary: SR-IOV Network Device Plugin
+maintainers:
+  - George Kraft <george.kraft@canonical.com>
+description: |
+  The SR-IOV network device plugin is Kubernetes device plugin for discovering
+  and advertising SR-IOV virtual functions (VFs) available on a Kubernetes host.
+tags:
+  - misc
+series:
+  - kubernetes
+provides: {}
+requires: {}
+peers: {}
+resources:
+  sriov-network-device-plugin-image:
+    type: oci-image
+    description: 'SR-IOV Network Device Plugin image'
+deployment:
+  type: daemon
+  service: omit
+min-juju-version: 2.8.0

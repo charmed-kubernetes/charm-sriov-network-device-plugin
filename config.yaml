@@ -1,0 +1,37 @@
+options:
+  log-level:
+    type: int
+    default: 10
+    description: |
+      Log level for the sriov-network-device-plugin service.
+  resource-list:
+    type: string
+    default: '[]'
+    description: |
+      A YAML list of resource definitions for the SR-IOV Network Device Plugin,
+      which will be passed into the resourceList field of the device plugin's
+      ConfigMap.
+
+      Example value:
+
+      [
+        {
+          "resourceName": "intel_sriov_netdevice",
+          "selectors": {
+            "vendors": ["8086"],
+            "devices": ["154c", "10ed"],
+            "drivers": ["i40evf", "ixgbevf"]
+          }
+        }
+      ]
+
+      For more details, please refer to the SR-IOV Network Device Plugin
+      documentation for the resourceList config:
+      https://github.com/intel/sriov-network-device-plugin/tree/db98d96cc0d6ad3fff917ba238bd1cc5cc3f7e82#config-parameters
+  resource-prefix:
+    type: string
+    default: 'intel.com'
+    description: |
+      Resource name prefix used for K8s extended resource. This is passed to
+      the sriov-network-device-plugin service via the --resource-prefix command
+      line argument.
