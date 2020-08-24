@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -x
+
+export PATH=/snap/bin:$PATH
+
+charm whoami
+RET=$?
+if ((RET > 0)); then
+    echo "Not logged into charmstore"
+    exit 1
+fi
+
+rm -rf temp
+mkdir temp
+cd temp
+unzip ../"$CHARM".charm
+URL=$(charm push . cs:~"$NAMESPACE"/"$CHARM" | yq r - url)
+charm attach cs:~"$NAMESPACE"/"$CHARM" --channel unpublished sriov-network-device-plugin-image=nfvpe/sriov-device-plugin
+
+if [ "$CHANNEL" != unpublished ]; then
+    IMAGE_NAME=$(charm list-resources cs:~"$NAMESPACE"/"$CHARM" --channel unpublished --format yaml | yq r - [0].name)
+    IMAGE_REV=$(charm list-resources cs:~"$NAMESPACE"/"$CHARM" --channel unpublished --format yaml | yq r - [0].revision)
+
+    charm release "$URL" --channel "$CHANNEL" --resource "$IMAGE_NAME"-"$IMAGE_REV"
+fi

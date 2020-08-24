@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -x
+
+docker pull nfvpe/sriov-device-plugin
+
+$HOME/.local/bin/charmcraft build
