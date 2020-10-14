@@ -1,7 +1,10 @@
 #!/bin/bash
+set -eu
 
-set -x
+mkdir -p "$CHARM_BUILD_DIR"
 
-docker pull nfvpe/sriov-device-plugin
+CHARM_SRC="$(realpath .)"
 
-$HOME/.local/bin/charmcraft build
+echo "Building $CHARM..."
+(cd "$CHARM_BUILD_DIR" && charmcraft build -f "$CHARM_SRC" 2>&1) | sed -e "s,in ',in '$CHARM_BUILD_DIR/,"
+exit "${PIPESTATUS[0]}"

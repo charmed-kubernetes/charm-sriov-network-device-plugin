@@ -16,6 +16,7 @@ resources:
   sriov-network-device-plugin-image:
     type: oci-image
     description: 'SR-IOV Network Device Plugin image'
+    upstream-source: nfvpe/sriov-device-plugin:v3.2
 deployment:
   type: daemon
   service: omit
