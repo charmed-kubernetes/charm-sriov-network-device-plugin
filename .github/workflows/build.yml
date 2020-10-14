@@ -1,5 +1,5 @@
 name: Builds sriov-network-device-plugin charm
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   build:
