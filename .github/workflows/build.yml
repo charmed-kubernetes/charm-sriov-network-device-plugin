@@ -21,6 +21,13 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.8'
-      - name: Run build
+      - name: Install Dependencies
         run: |
-          make charm
+          sudo snap install charmcraft --beta
+      - name: Build charm
+        run: |
+          if ! charmcraft build; then
+            echo Build failed, full log:
+            cat "$(ls -1t "$HOME"/snap/charmcraft/common/charmcraft-log-* | head -n1)"
+            exit 1
+          fi
