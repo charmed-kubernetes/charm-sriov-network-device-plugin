@@ -7,17 +7,11 @@ via Juju.
 ## Development
 
 ### Building
-Build the charm:
+
+Build the charm with [charmcraft][]:
 
 ```
-make charm
-```
-
-### Uploading
-To upload to the charm store:
-
-```
-make upload NAMESPACE=<NAMESPACE> CHANNEL=<CHANNEL>
+charmcraft build
 ```
 
 ### Testing
@@ -40,5 +34,7 @@ juju add-model my-k8s-model my-k8s-cloud
 Deploy the SR-IOV Network Device Plugin:
 
 ```
-juju deploy cs:~${NAMESPACE}/sriov-network-device-plugin --channel edge
+juju deploy ./sriov-network-device-plugin.charm --resource sriov-network-device-plugin-image=nfvpe/sriov-device-plugin:v3.2
 ```
+
+[charmcraft]: https://github.com/canonical/charmcraft/
