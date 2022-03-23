@@ -23,7 +23,7 @@ jobs:
           python-version: '3.8'
       - name: Install Dependencies
         run: |
-          sudo snap install charmcraft --beta
+          sudo snap install charmcraft --classic
       - name: Build charm
         run: |
           if ! charmcraft build; then
