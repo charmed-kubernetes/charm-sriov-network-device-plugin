@@ -11,7 +11,7 @@ via Juju.
 Build the charm with [charmcraft][]:
 
 ```
-charmcraft build
+charmcraft pack
 ```
 
 ### Testing

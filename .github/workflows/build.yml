@@ -26,7 +26,7 @@ jobs:
           sudo snap install charmcraft --classic
       - name: Build charm
         run: |
-          if ! charmcraft build; then
+          if ! charmcraft pack --destructive-mode; then
             echo Build failed, full log:
             cat "$(ls -1t "$HOME"/snap/charmcraft/common/charmcraft-log-* | head -n1)"
             exit 1
