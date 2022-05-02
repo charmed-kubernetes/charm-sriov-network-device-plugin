@@ -1,5 +1,6 @@
 name: sriov-network-device-plugin
 summary: SR-IOV Network Device Plugin
+docs: https://discourse.charmhub.io/t/sriov-cni-index-docs/6321
 maintainers:
   - George Kraft <george.kraft@canonical.com>
 description: |
