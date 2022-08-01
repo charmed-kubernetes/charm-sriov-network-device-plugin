@@ -1,4 +1,22 @@
+# Architectures based on supported arch's in upstream
+# wokeignore:rule=master
+# https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin/blob/c1a8c92338abe058225489e2ef04e8731f5ced40/.github/workflows/image-push-master.yml
 type: charm
 bases:
-- name: ubuntu
-  channel: "20.04"
+  - build-on:
+    - name: "ubuntu"
+      channel: "20.04"
+      architectures: ["amd64"]
+    run-on:
+    - name: "ubuntu"
+      channel: "20.04"
+      architectures:
+        - amd64
+        - arm64
+        - ppc64le
+    - name: "ubuntu"
+      channel: "22.04"
+      architectures:
+        - amd64
+        - arm64
+        - ppc64le
