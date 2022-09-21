@@ -1,8 +1,17 @@
 # SR-IOV Network Device Plugin Charm
 
-This is an early proof-of-concept for deploying and managing Intel's
-[SR-IOV Network Device Plugin](https://github.com/intel/sriov-network-device-plugin/)
-via Juju.
+[SR-IOV Network Device Plugin][sriov-network-device-plugin] is a Kubernetes
+device plugin for discovering and advertising networking resources in the form
+of SR-IOV Virtual Functions (VFs) and PCI physical functions (PFs) available on
+a Kubernetes host.
+
+This charm, when deployed to a Kubernetes cloud, will create a DaemonSet that
+runs the SR-IOV Network Device Plugin on every Kubernetes node in the cluster.
+
+This charm is a component of Charmed Kubernetes. For full information,
+please visit the [official Charmed Kubernetes docs](https://ubuntu.com/kubernetes/docs/cni-sriov).
+
+[sriov-network-device-plugin]: https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin
 
 ## Development
 
