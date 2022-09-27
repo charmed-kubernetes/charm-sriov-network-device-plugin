@@ -8,17 +8,6 @@ description: |
   and advertising SR-IOV virtual functions (VFs) available on a Kubernetes host.
 tags:
   - misc
-series:
-  - kubernetes
 provides: {}
 requires: {}
 peers: {}
-resources:
-  sriov-network-device-plugin-image:
-    type: oci-image
-    description: 'SR-IOV Network Device Plugin image'
-    upstream-source: nfvpe/sriov-device-plugin:v3.2
-deployment:
-  type: daemon
-  service: omit
-min-juju-version: 2.8.0

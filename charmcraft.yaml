@@ -20,3 +20,8 @@ bases:
         - amd64
         - arm64
         - ppc64le
+parts:
+  charm:
+    build-packages: [git]
+    prime:
+    - upstream
