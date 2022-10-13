@@ -1,6 +1,7 @@
 import json
 import logging
 import traceback
+from typing import Optional
 
 import yaml
 from ops.manifests import ConfigRegistry, ManifestLabel, Manifests, Patch
@@ -9,10 +10,16 @@ log = logging.getLogger()
 
 
 class RemoveNamespace(Patch):
-    """Remove namespace from resources so they deploy to the local namespace"""
+    """Remove namespace from resources so they deploy to the charm's namespace"""
 
     def __call__(self, obj):
         obj.metadata.namespace = None
+
+
+class ResourceListConfigError(Exception):
+    """Raised when the resource-list charm config is invalid"""
+
+    pass
 
 
 class SetCommandLineArgs(Patch):
@@ -63,26 +70,34 @@ class SRIOVNetworkDevicePluginManifests(Manifests):
         )
         self.charm_config = charm_config
 
-    @property
-    def config(self):
-        log_level = self.charm_config.get("log-level", 10)
-        resource_prefix = self.charm_config.get("resource-prefix", "intel.com")
+    def get_resource_list(self, check=True):
         resource_list_str = self.charm_config.get("resource-list", "[]")
-        error = None
+        resource_list = []
         try:
             resource_list = yaml.safe_load(resource_list_str)
-            if not resource_list:
-                error = "resource-list config must be specified"
+            if check and not resource_list:
+                raise ResourceListConfigError("resource-list config must be specified")
         except yaml.YAMLError:
             log.error(traceback.format_exc())
-            resource_list = []
-            error = "resource-list config is invalid, see debug-log"
+            if check:
+                raise ResourceListConfigError(
+                    "resource-list config is invalid, see debug-log"
+                )
+        return resource_list
 
+    @property
+    def config(self):
         return {
-            "error": error,
             "image-registry": self.charm_config["image-registry"],
-            "log-level": log_level,
+            "log-level": self.charm_config.get("log-level", 10),
             "release": None,
-            "resource-list": resource_list,
-            "resource-prefix": resource_prefix,
+            "resource-list": self.get_resource_list(check=False),
+            "resource-prefix": self.charm_config.get("resource-prefix", "intel.com"),
         }
+
+    @property
+    def error(self) -> Optional[str]:
+        try:
+            self.get_resource_list()
+        except ResourceListConfigError as e:
+            return str(e)

@@ -21,13 +21,13 @@ class SRIOVNetworkDevicePluginCharm(CharmBase):
         self.framework.observe(self.on.update_status, self.update_status)
 
     def config_changed(self, event):
-        if not self.manifests.config["error"]:
+        if not self.manifests.error:
             self.manifests.apply_manifests()
 
         self.update_status(event)
 
     def update_status(self, event):
-        error = self.manifests.config["error"]
+        error = self.manifests.error
         if error:
             self.model.unit.status = BlockedStatus(error)
             return
