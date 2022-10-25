@@ -1,4 +1,9 @@
 options:
+  image-registry:
+    type: string
+    default: rocks.canonical.com:443/cdk
+    description: |
+      Container image registry for sriov-network-device-plugin
   log-level:
     type: int
     default: 10

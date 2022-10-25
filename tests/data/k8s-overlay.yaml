@@ -1,0 +1,4 @@
+applications:
+  kubernetes-control-plane:
+    options:
+      allow-privileged: "true"
