@@ -117,7 +117,6 @@ class SRIOVNetworkDevicePluginManifests(Manifests):
     def config(self):
         return {
             "image-registry": self.charm_config["image-registry"],
-            "control-node-taints": {},
             "log-level": self.charm_config.get("log-level", 10),
             "release": None,
             "resource-list": self.get_resource_list(check=False),
