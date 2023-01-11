@@ -4,6 +4,7 @@ import traceback
 from typing import Optional
 
 import yaml
+from lightkube.models.core_v1 import Toleration
 from ops.manifests import ConfigRegistry, ManifestLabel, Manifests, Patch
 
 log = logging.getLogger()
@@ -20,6 +21,32 @@ class ResourceListConfigError(Exception):
     """Raised when the resource-list charm config is invalid"""
 
     pass
+
+
+class UpdateDaemonSetTolerations(Patch):
+    """Update sriovdp's to also tolerate a noschedule control-plane."""
+
+    def __call__(self, obj):
+        """Update the DaemonSet object in the manifest."""
+        if not (
+            obj.kind == "DaemonSet"
+            and obj.metadata.name.startswith("kube-sriov-device-plugin")
+        ):
+            return
+
+        current_keys = {
+            toleration.key for toleration in obj.spec.template.spec.tolerations
+        }
+        control_plane_key = "node-role.kubernetes.io/control-plane"
+        if control_plane_key not in current_keys:
+            log.info(f"Adding tolerations to {obj.metadata.name}")
+            obj.spec.template.spec.tolerations += [
+                Toleration(
+                    key=control_plane_key,
+                    operator="Exists",
+                    effect="NoSchedule",
+                )
+            ]
 
 
 class SetCommandLineArgs(Patch):
@@ -64,6 +91,7 @@ class SRIOVNetworkDevicePluginManifests(Manifests):
             RemoveNamespace(self),
             SetCommandLineArgs(self),
             SetConfigMapData(self),
+            UpdateDaemonSetTolerations(self),
         ]
         super().__init__(
             "sriov-network-device-plugin", charm.model, "upstream", manipulations
