@@ -10,7 +10,12 @@ import ops.testing
 import pytest
 
 from charm import SRIOVNetworkDevicePluginCharm
-from manifests import RemoveNamespace, SetCommandLineArgs, SetConfigMapData
+from manifests import (
+    RemoveNamespace,
+    SetCommandLineArgs,
+    SetConfigMapData,
+    UpdateDaemonSetTolerations,
+)
 
 
 @pytest.fixture
@@ -30,6 +35,35 @@ def test_remove_namespace(harness):
     obj.metadata.namespace = "kube-system"
     patch(obj)
     assert obj.metadata.namespace is None
+
+
+def test_update_tolerations(harness):
+    patch = UpdateDaemonSetTolerations(harness.charm.manifests)
+    toleration = mock.MagicMock()
+    toleration.key = "node-role.kubernetes.io/important"
+    toleration.operator = "Exists"
+    toleration.effect = "NoSchedule"
+
+    obj = mock.MagicMock()
+    obj.kind = "DaemonSet"
+    obj.metadata.name = "kube-sriov-device-plugin-amd64"
+    obj.spec.template.spec.tolerations = [toleration]
+    patch(obj)
+    assert len(obj.spec.template.spec.tolerations) == 2
+    assert all(
+        t.key.endswith(("control-plane", "important"))
+        for t in obj.spec.template.spec.tolerations
+    )
+
+
+def test_update_tolerations_only_changes_recognized_daemonset(
+    harness,
+):
+    patch = UpdateDaemonSetTolerations(harness.charm.manifests)
+    obj = mock.Mock(kind="DaemonSet", **{"metadata.name": "not-sriovdp"})
+    patch(obj)
+    # Mock object would raise a TypeError
+    # if any attempt to access the spec is attempted
 
 
 def test_set_command_line_args(harness):
