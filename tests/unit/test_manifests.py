@@ -50,10 +50,10 @@ def test_update_tolerations(harness):
     obj.spec.template.spec.tolerations = [toleration]
     patch(obj)
     assert len(obj.spec.template.spec.tolerations) == 2
-    assert any(
-        t.key.endswith("control-plane") for t in obj.spec.template.spec.tolerations
+    assert all(
+        t.key.endswith(("control-plane", "important"))
+        for t in obj.spec.template.spec.tolerations
     )
-    assert any(t.key.endswith("important") for t in obj.spec.template.spec.tolerations)
 
 
 def test_update_tolerations_only_changes_recognized_daemonset(
