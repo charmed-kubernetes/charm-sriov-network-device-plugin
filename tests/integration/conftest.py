@@ -11,6 +11,7 @@ import yaml
 from pytest_operator.plugin import OpsTest
 
 log = logging.getLogger(__name__)
+SERIES = "jammy"
 
 
 def pytest_addoption(parser):
@@ -29,7 +30,7 @@ def pytest_addoption(parser):
 @pytest.fixture(scope="module")
 async def charmed_kubernetes(ops_test):
     overlays = [
-        ops_test.Bundle("kubernetes-core", channel="edge"),
+        ops_test.Bundle("kubernetes-core", channel="edge", series=SERIES),
         "tests/data/k8s-overlay.yaml",
     ]
 
