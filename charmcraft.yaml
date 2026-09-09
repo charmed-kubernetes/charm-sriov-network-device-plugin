@@ -13,13 +13,13 @@ bases:
       architectures:
         - amd64
         - arm64
-        - ppc64le
+        - ppc64el
     - name: "ubuntu"
       channel: "22.04"
       architectures:
         - amd64
         - arm64
-        - ppc64le
+        - ppc64el
 parts:
   charm:
     build-packages: [git]
