@@ -66,7 +66,9 @@ def test_update_tolerations_only_changes_recognized_daemonset(
     # if any attempt to access the spec is attempted
 
 
-@pytest.mark.parametrize("name", ["kube-sriov-device-plugin-amd64", "kube-sriov-device-plugin"])
+@pytest.mark.parametrize(
+    "name", ["kube-sriov-device-plugin-amd64", "kube-sriov-device-plugin"]
+)
 def test_set_command_line_args(harness, name):
     patch = SetCommandLineArgs(harness.charm.manifests)
     container = mock.MagicMock()
@@ -141,7 +143,9 @@ def test_update_missing_tolerations(harness, tolerations):
         metadata=ObjectMeta(name="kube-sriov-device-plugin"),
         spec=DaemonSetSpec(
             selector=LabelSelector(matchLabels={"name": "sriov-device-plugin"}),
-            template=PodTemplateSpec(spec=PodSpec(containers=[], tolerations=tolerations)),
+            template=PodTemplateSpec(
+                spec=PodSpec(containers=[], tolerations=tolerations)
+            ),
         ),
     )
     patch = UpdateDaemonSetTolerations(harness.charm.manifests)

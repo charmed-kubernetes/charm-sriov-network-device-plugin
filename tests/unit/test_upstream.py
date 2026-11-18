@@ -58,9 +58,10 @@ def test_render_bundles_and_preserve_upgrade_identity(release):
             ]
             assert len(scheduled) == 1
             obj = scheduled[0]
-            assert obj.spec.selector.to_dict() == original[obj.metadata.name]["spec"][
-                "selector"
-            ]
+            assert (
+                obj.spec.selector.to_dict()
+                == original[obj.metadata.name]["spec"]["selector"]
+            )
             assert all(
                 obj.spec.template.metadata.labels[key] == value
                 for key, value in obj.spec.selector.matchLabels.items()

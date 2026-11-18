@@ -8,7 +8,9 @@ from urllib.request import urlopen
 
 import yaml
 
-UPSTREAM = "https://raw.githubusercontent.com/k8snetworkplumbingwg/sriov-network-device-plugin"
+UPSTREAM = (
+    "https://raw.githubusercontent.com/k8snetworkplumbingwg/sriov-network-device-plugin"
+)
 ARCHITECTURES = ("amd64", "ppc64le", "arm64")
 
 
