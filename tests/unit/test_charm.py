@@ -34,7 +34,7 @@ def test_config_ready(mock_apply_manifests, harness):
     mock_apply_manifests.assert_called_once_with()
     assert harness.charm.unit.status == ActiveStatus()
     assert harness.charm.app.status == ActiveStatus(
-        "Versions: sriov-network-device-plugin=v3.5.1"
+        "Versions: sriov-network-device-plugin=v3.11.0"
     )
 
 
