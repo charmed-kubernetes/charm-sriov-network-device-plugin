@@ -12,6 +12,8 @@ UPSTREAM = (
     "https://raw.githubusercontent.com/k8snetworkplumbingwg/sriov-network-device-plugin"
 )
 ARCHITECTURES = ("amd64", "ppc64le", "arm64")
+# Upstream's own legacy taint key; retained for the old charm scheduling.
+LEGACY_CONTROL_PLANE_KEY = "node-role.kubernetes.io/master"  # wokeignore:rule=master
 
 
 def release_tag(value):
@@ -42,12 +44,11 @@ def daemonsets_for_upgrade(resources, version):
                 # planes, without discarding any new upstream tolerations.
                 tolerations = spec.get("tolerations") or []
                 if not any(
-                    item.get("key") == "node-role.kubernetes.io/master"
-                    for item in tolerations
+                    item.get("key") == LEGACY_CONTROL_PLANE_KEY for item in tolerations
                 ):
                     tolerations = tolerations + [
                         {
-                            "key": "node-role.kubernetes.io/master",
+                            "key": LEGACY_CONTROL_PLANE_KEY,
                             "operator": "Exists",
                             "effect": "NoSchedule",
                         }
