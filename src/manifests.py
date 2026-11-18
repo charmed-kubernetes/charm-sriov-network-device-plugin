@@ -34,13 +34,12 @@ class UpdateDaemonSetTolerations(Patch):
         ):
             return
 
-        current_keys = {
-            toleration.key for toleration in obj.spec.template.spec.tolerations
-        }
+        tolerations = obj.spec.template.spec.tolerations or []
+        current_keys = {toleration.key for toleration in tolerations}
         control_plane_key = "node-role.kubernetes.io/control-plane"
         if control_plane_key not in current_keys:
             log.info(f"Adding tolerations to {obj.metadata.name}")
-            obj.spec.template.spec.tolerations += [
+            obj.spec.template.spec.tolerations = tolerations + [
                 Toleration(
                     key=control_plane_key,
                     operator="Exists",
@@ -53,8 +52,9 @@ class SetCommandLineArgs(Patch):
     """Set sriovdp's command line args"""
 
     def __call__(self, obj):
-        if obj.kind != "DaemonSet" or not obj.metadata.name.startswith(
-            "kube-sriov-device-plugin-"
+        if obj.kind != "DaemonSet" or not (
+            obj.metadata.name == "kube-sriov-device-plugin"
+            or obj.metadata.name.startswith("kube-sriov-device-plugin-")
         ):
             return
         args_to_set = {
